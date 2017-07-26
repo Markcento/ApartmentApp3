@@ -1,0 +1,72 @@
+<%= form_with( model: listing, local: true, html: { multipart: true }) do |form| %>
+  <% if listing.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(listing.errors.count, "error") %> prohibited this listing from being saved:</h2>
+
+      <ul>
+      <% listing.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<%= form.file_field :image %>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_field :address, id: :listing_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :city %>
+    <%= form.text_field :city, id: :listing_city %>
+  </div>
+
+  <div class="field">
+    <%= form.label :state %>
+    <%= form.text_field :state, id: :listing_state %>
+  </div>
+
+  <div class="field">
+    <%= form.label :postcode %>
+    <%= form.number_field :postcode, id: :listing_postcode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :country %>
+    <%= form.text_field :country, id: :listing_country %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :listing_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :phone %>
+    <%= form.text_field :phone, id: :listing_phone %>
+  </div>
+
+  <div class="field">
+    <%= form.label :opening %>
+    <%= form.time_select :opening, id: :listing_opening %>
+  </div>
+
+  <div class="field">
+    <%= form.label :closing %>
+    <%= form.time_select :closing, id: :listing_closing %>
+  </div>
+
+  <div class="field">
+    <%= form.hidden_field :latitude, id: :listing_latitude%>
+  </div>
+
+  <div class="field">
+    <%= form.hidden_field :longitude, id: :listing_longitude %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,119 @@
+<style>
+  /* Always set the map height explicitly to define the size of the div
+   * element that contains the map. */
+  #showmap {
+    height: 50vh;
+  }
+</style>
+
+<input id="address" type="hidden" value="<%= @listing.address %>,<%= @listing.city %>,<%= @listing.state %>,
+<%= @listing.postcode %>">
+<div id="showmap"></div>
+<script>
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('showmap'), {
+    zoom: 12,
+    center: {lat: 32.70961, lng: -117.1579991}
+  });
+  // var contentString = "don't click me";
+  //
+  // var infowindow = new google.maps.InfoWindow({
+  //   content: contentString
+  // });
+
+  var geocoder = new google.maps.Geocoder();
+
+  function geocodeme() {
+    geocodeAddress(geocoder, map);
+  };
+  geocodeme()
+}
+
+function geocodeAddress(geocoder, resultsMap) {
+  var address = document.getElementById('address').value;
+  geocoder.geocode({'address': address}, function(results, status) {
+    if (status === 'OK') {
+      resultsMap.setCenter(results[0].geometry.location);
+      var marker = new google.maps.Marker({
+        map: resultsMap,
+        position: results[0].geometry.location
+      });
+      var l1 = results[0].geometry.location.lat()
+      var l2 = results[0].geometry.location.lng()
+      console.log(l1);
+      console.log(l2);
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+// marker.addListener('click', function() {
+//  infowindow.open(map, marker);
+// });
+
+</script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBH6kpKgMyIrX12CYckcHQt3eEesCTbIlo&callback=initMap">
+</script>
+
+<p id="notice"><%= notice %></p>
+
+<%= link_to image_tag(@listing.image.url(:large)), @listing.image.url %>
+
+<p>
+  <strong>Address:</strong>
+  <%= @listing.address %>
+</p>
+
+<p>
+  <strong>City:</strong>
+  <%= @listing.city %>
+</p>
+
+<p>
+  <strong>State:</strong>
+  <%= @listing.state %>
+</p>
+
+<p>
+  <strong>Postcode:</strong>
+  <%= @listing.postcode %>
+</p>
+
+<p>
+  <strong>Country:</strong>
+  <%= @listing.country %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @listing.name %>
+</p>
+
+<p>
+  <strong>Phone:</strong>
+  <%= @listing.phone %>
+</p>
+
+<p>
+  <strong>Opening:</strong>
+  <%= @listing.opening.strftime(" %H:%M") %>
+</p>
+
+<p>
+  <strong>Closing:</strong>
+  <%= @listing.closing.strftime(" %H:%M") %>
+</p>
+
+<p>
+  <strong>Latitude:</strong>
+  <%= @listing.latitude %>
+</p>
+
+<p>
+  <strong>Longitude:</strong>
+  <%= @listing.longitude %>
+</p>
+
+<%= link_to 'Edit', edit_listing_path(@listing) %> |
+<%= link_to 'Back', listings_path %>

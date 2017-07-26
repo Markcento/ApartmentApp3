@@ -1,0 +1,48 @@
+<h1>New Listing</h1>
+<input type="hidden" name="address" value="params[:]">
+
+<script>
+// function addcord() {
+//   form.submit.on(click)
+//   on click add lat and lng to params to create new coordinates
+//    look up how to add script to ruby submit button
+//  on click you run geocde or fill in those values
+//  verify that geocode ran and filled those variables
+// }
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('showmap'), {
+    zoom: 12,
+    center: {lat: 32.70961, lng: -117.1579991}
+  });
+
+var geocoder = new google.maps.Geocoder();
+
+function geocodeme() {
+  geocodeAddress(geocoder, map);
+};
+geocodeme()
+}
+
+function geocodeAddress(geocoder, resultsMap) {
+var address = document.getElementById('address').value;
+geocoder.geocode({'address': address}, function(results, status) {
+  if (status === 'OK') {
+    resultsMap.setCenter(results[0].geometry.location);
+    var marker = new google.maps.Marker({
+      map: resultsMap,
+      position: results[0].geometry.location
+    });
+    var l1 = results[0].geometry.location.lat()
+    var l2 = results[0].geometry.location.lng()
+    console.log(l1);
+    console.log(l2);
+  } else {
+    alert('Geocode was not successful for the following reason: ' + status);
+  }
+});
+}
+</script>
+
+<%= render 'form', listing: @listing %>
+
+<%= link_to 'Back', listings_path %>

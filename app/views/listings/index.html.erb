@@ -1,0 +1,176 @@
+<div class="wrap">
+   <div class="search">
+     <form  action="listings/search" method="get">
+       <input type="text" class="searchTerm"
+       name = "address" placeholder="Type your address">
+       <button type="submit"
+       class="searchButton"
+       name="button">Submit</button>
+     </form>
+   </div>
+</div>
+<br>
+<style>
+  #map {
+    height: 50vh;
+  }
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+</style>
+<div id="map"></div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (document.querySelectorAll('#map').length > 0)
+  {
+    if (document.querySelector('html').lang)
+      lang = document.querySelector('html').lang;
+    else
+      lang = 'en';
+
+    var js_file = document.createElement('script');
+    js_file.type = 'text/javascript';
+    js_file.src = 'https://maps.googleapis.com/maps/api/js?callback=initMap&signed_in=true&language=' + lang;
+    document.getElementsByTagName('head')[0].appendChild(js_file);
+  }
+});
+
+var map;
+function initMap()  {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 33.397, lng: -115.644},
+    zoom: 8
+  });
+
+  // var contentString = "don't click me";
+  //
+  // var infowindow = new google.maps.InfoWindow({
+  //   content: contentString
+  // });
+//   fetch('listings.json')
+//       .then(function(response){return response.json()})
+//       .then(plotMarkers);
+//
+//   var markers;
+//   var bounds;
+//   var geocoder = new google.maps.Geocoder();
+//   function geocodeme() {
+//     geocodeAddress(geocoder, map);
+//   };
+//   geocodeme()
+// }
+//
+//   function plotMarkers(m)
+//   {
+//     markers = [];
+//     bounds = new google.maps.LatLngBounds();
+//
+//     m.forEach(function (marker) {
+//
+//       function geocodeAddress(geocoder, resultsMap) {
+//         var address = document.getElementById('address').value;
+//         geocoder.geocode({'address': address}, function(results, status) {
+//           if (status === 'OK') {
+//             resultsMap.setCenter(results[0].geometry.location);
+//             var marker = new google.maps.Marker({
+//               map: resultsMap,
+//               position: results[0].geometry.location
+//             });
+//             var l1 = results[0].geometry.location.lat()
+//             var l2 = results[0].geometry.location.lng()
+//             console.log(l1);
+//             console.log(l2);
+//           } else {
+//             alert('Geocode was not successful for the following reason: ' + status);
+//           }
+//         });
+//       }
+
+
+// function initMap()
+// {
+//   map = new google.maps.Map(document.getElementById('map'), {
+//     center: {lat: 33.397, lng: -115.644},
+//     zoom: 8
+//   });
+//
+//   fetch('listings.json')
+//     .then(function(response){return response.json()})
+//     .then(plotMarkers);
+// }
+//
+// var markers;
+// var bounds;
+//
+// function plotMarkers(m)
+// {
+//   markers = [];
+//   bounds = new google.maps.LatLngBounds();
+//
+//   m.forEach(function (marker) {
+//
+//     var position = new google.maps.LatLng(marker.latitude, marker.longitude);
+//
+//     markers.push(
+//       new google.maps.Marker({
+//         position: position,
+//         map: map,
+//         animation: google.maps.Animation.DROP
+//       })
+//     );
+//comment here
+  //   bounds.extend(position);
+  // });
+  //
+  // map.fitBounds(bounds);
+}
+</script>
+
+<p id="notice"><%= notice %></p>
+<h1>Listings</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Address</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Postcode</th>
+      <th>Country</th>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Opening</th>
+      <th>Closing</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @listings.each do |listing| %>
+      <tr>
+        <td><%= listing.address %></td>
+        <td><%= listing.city %></td>
+        <td><%= listing.state %></td>
+        <td><%= listing.postcode %></td>
+        <td><%= listing.country %></td>
+        <td><%= listing.name %></td>
+        <td><%= listing.phone %></td>
+        <td><%= listing.opening.strftime(" %H:%M") %></td>
+        <td><%= listing.closing.strftime(" %H:%M") %></td>
+        <td><%= listing.latitude %></td>
+        <td><%= listing.longitude %></td>
+        <td><%= link_to 'Show', listing %></td>
+        <td><%= link_to 'Edit', edit_listing_path(listing) %></td>
+        <td><%= link_to 'Destroy', listing, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Listing', new_listing_path %>
