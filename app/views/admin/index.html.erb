@@ -1,0 +1,26 @@
+<h1>Admin#index</h1>
+<h1>Users</h1>
+<table>
+  <thead>
+    <thead>
+      <tr>
+        <th>Email</th><th>Role</th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.email %></td>
+      <td><%= user.roles.last.name %></td>
+      <td>
+        <%= form_tag("/admin/" + user.id.to_s + "?role=office", method: :PUT) do %>
+          <input type="submit" value="Make Office"/>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Home', listings_path %>

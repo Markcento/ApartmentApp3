@@ -1,40 +1,10 @@
 class ListingsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_listing, only: [:show, :edit, :update, :destroy]
-  # before_action :authenticate_user!
+  load_and_authorize_resource
 
-  # GET /listings
-  # GET /listings.json
-  def index
-    @listings = Listing.all
-  end
-
-  # GET /listings/1
-  # GET /listings/1.json
-  def show
-  end
-
-  def search
-    @results = Listing.basic_search(address: params[:address])
-
-
-    if @results.size == 0
-      # handle instance when there aren't any results
-    end
-
-    redirect_to "/listings/#{@results.first.id}"
-  end
-  # GET /listings/new
-  def new
-    @listing = Listing.new
-  end
-
-  # GET /listings/1/edit
-  def edit
-  end
-
-  # POST /listings
-  # POST /listings.json
   def create
+    @user = current_user
     @listing = Listing.new(listing_params)
     respond_to do |format|
       if @listing.save
@@ -46,6 +16,44 @@ class ListingsController < ApplicationController
       end
     end
   end
+
+  # before_action :authenticate_user!
+
+  # GET /listings
+  # GET /listings.json
+  def index
+    @listings = Listing.all
+    # @listings = Listing.where(user: current_user) unless current_user.has_role?(:admin) || current_user.has_role?(:office) || current_user.has_role?(:seeker)
+
+    @ability = Ability.new(current_user)
+  end
+
+  def show
+    @user = current_user
+  end
+
+  def search
+    @results = Listing.basic_search(address: params[:address])
+
+    if @results.size == 0
+      # handle instance when there aren't any results
+    end
+
+    redirect_to "/listings/#{@results.first.id}"
+  end
+  # GET /listings/new
+  def new
+    @listing = Listing.new
+    @user = current_user
+  end
+
+  # GET /listings/1/edit
+  def edit
+    @user = current_user
+  end
+
+  # POST /listings
+  # POST /listings.json
 
   # PATCH/PUT /listings/1
   # PATCH/PUT /listings/1.json
@@ -80,6 +88,6 @@ class ListingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def listing_params
-      params.require(:listing).permit(:address, :city, :state, :postcode, :country, :name, :phone, :opening, :closing, :latitude, :longitude, :image)
+      params.require(:listing).permit(:address, :city, :state, :postcode, :country, :name, :phone, :opening, :closing, :latitude, :longitude, :image, :user_id)
     end
 end
